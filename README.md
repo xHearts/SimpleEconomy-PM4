@@ -2,4 +2,4 @@
 
 **Goals:**
 
-- Make the plugin more configurable (Editable messages, max money, etc.)
+- Make the plugin more configurable (Editable messages, max money, etc.) ❌
