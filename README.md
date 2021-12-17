@@ -15,5 +15,5 @@ $simpleEco->reduceMoney($player->getName(), $amount);
 
 **Goals:**
 
-- Add the pay command ❌
+- Add the pay command ✅
 - Make the plugin more configurable (Editable messages, max money, etc.) ❌
