@@ -1,6 +1,3 @@
-<?php
-
-namespace economy\commands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -13,51 +10,50 @@ class PayCommand extends Command{
 
     public function __construct($name){
         parent::__construct($name);
-        Main::registerPermission("pay.command");
-        $this->setDescription("Pay someone an amount of money.");
-        $this->setPermission("pay.command");
+        Main::registerPermission("paycmd.command");
+        $this->setDescription("pay money to a player's ");
+        $this->setPermission("paycmd.command");
         $this->setUsage("/pay");
-        // Made the pay command bc Rinier is lazy..
+        $this->setAliases(["pay"]);
     }
-    
+
     public function execute(CommandSender $sender, string $label, array $args) : bool{
-        if(Server::getInstance()->isOp($sender->getName()) or $sender->hasPermission("pay.command")){
-            if($sender instanceof Player){
-                if(isset($args[0])){
-                    if(($player = Server::getInstance()->getPlayerByPrefix($args[0])) instanceof Player){
-                        $senderMoney = Main::getDatabase()->getMoney($sender->getName());
-                        if(isset($args[1])){
-                            if(is_numeric($args[1])){
-                                if($senderMoney >= $args[1]){
-                                    Main::getDatabase()->removeMoney($sender->getName(), $args[1]);
-                                    Main::getDatabase()->addMoney($sender->getName(), $args[1]);
-                                    // Send sent money message to both users
-                                } else {
-                                    // The sender doesn't have enough money
-                                    return false;
-                                }
-                            } else {
-                                // Argument 2 isn't a number
-                                return false;
-                            }
+        if(Server::getInstance()->isOp($sender->getName()) or $sender->hasPermission("paycmd.command")){
+            if(isset($args[0]) and isset($args[1])){
+                if(is_string($args[0])){
+                    if(is_numeric($args[1])){
+                        $cm = Main::getDatabase();
+                        if($args[1] > $cm->getMoney($sender->getName())) {
+                            $sender->sendMessage("§aYou dont have enough money");
+                            return false:
+                        }
+                        if(($player = Server::getInstance()->getPlayerByPrefix($args[0])) instanceof Player){
+                            $cm->addMoney($player->getName(), $args[1]);
+                            $cm->removeMoney($sender->getName(), $args[1]);
+                            $player->sendMessage("§aYou receive: " . number_format($args[1]) . " from ".$player->getName().".");
+                            $sender->sendMessage("§aYou've payed: " . number_format($args[1]) . " to " . $player->getName() . ".");
                         } else {
-                            // Hasn't set the money amount
-                            return false;
+                            $cm->addMoney($args[0], $args[1]);
+                            $sender->sendMessage("§aYou've payed: " . number_format($args[1]) . " to " . $args[0] . ".");
                         }
                     } else {
-                        // Player chosen isn't online or doesn't exist
+                        $sender->sendMessage("§cThe amount has to be a number.");
                         return false;
                     }
                 } else {
-                    // Hasn't specified a player
+                    $sender->sendMessage("§cThat is not a player's name.");
                     return false;
                 }
             } else {
-                // Not a Player
+                $sender->sendMessage("§cUsage: /pay <player> <amount>");
                 return false;
             }
         } else {
-            // No perm
+            $sender->sendMessage("§cYou don't have permission to use this command.");
             return false;
         }
+        return true;
     }
+
+//copy and pasted w
+}
