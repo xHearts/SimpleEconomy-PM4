@@ -14,7 +14,6 @@ class PayCommand extends Command{
         $this->setDescription("pay money to a player's ");
         $this->setPermission("paycmd.command");
         $this->setUsage("/pay");
-        $this->setAliases(["pay"]);
     }
 
     public function execute(CommandSender $sender, string $label, array $args) : bool{
