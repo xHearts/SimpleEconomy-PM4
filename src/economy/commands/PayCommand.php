@@ -54,6 +54,4 @@ class PayCommand extends Command{
         }
         return true;
     }
-
-//copy and pasted w
 }
