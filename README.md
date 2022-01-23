@@ -1,5 +1,7 @@
 # SimpleEconomy-PM4
 
+(DROPPED) This plugin has been dropped bc it uses names to save the player's data. That can be easily exploited.
+
 **Tutorial (To use this)**
 1. Get our API:
 ```php
